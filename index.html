@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rug Sale – West Duluth</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;background:#f6f4f0;color:#222}
+header{background:#2f3e46;color:#fff;padding:22px 16px 16px;text-align:center}h1{margin:0 0 6px;font-size:1.6em}header p{margin:0;opacity:.9}
+.bar{position:sticky;top:0;background:#f6f4f0;padding:10px 12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;z-index:2;border-bottom:1px solid #e3ded5}
+.bar button,.bar select{border:1px solid #c9c2b6;background:#fff;border-radius:18px;padding:6px 12px;font-size:.9em}.bar button.on{background:#2f3e46;color:#fff;border-color:#2f3e46}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:14px;max-width:1100px;margin:auto}
+.c{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);position:relative}
+.c img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#ddd}.b{padding:10px 12px 14px}
+.n{font-size:.8em;color:#777}.t{font-weight:600;margin:2px 0}.s{color:#555;font-size:.9em}.cd{font-size:.88em;margin:6px 0;color:#444}
+.p{font-size:1.3em;font-weight:700}.r{color:#888;font-size:.85em;margin-left:6px;text-decoration:line-through}
+.l{display:inline-block;margin-top:8px;color:#1b5e9c;font-weight:600;text-decoration:none}
+.sold img{filter:grayscale(1);opacity:.55}.badge{position:absolute;top:10px;left:10px;background:#c0392b;color:#fff;font-weight:700;padding:4px 10px;border-radius:6px}
+footer{background:#2f3e46;color:#fff;padding:18px 16px 28px;text-align:center;font-size:.95em}footer p{margin:6px 0}
+</style></head><body>
+<header><h1>Rug Sale – West Duluth</h1><p>Big-box store liquidation rugs at a fraction of retail. Used – like new.</p></header>
+<div class="bar" id="f"></div><main id="g"></main>
+<footer><p><b>Questions or looking for a size you don't see? Message Derek Reinolt on Facebook with the rug number.</b></p>
+<p>Pickup near Wheeler Field / Wade Stadium, West Duluth.</p>
+<p>Delivery $20 in Duluth · $1/mile outside Duluth ($20 min).</p>
+<p>Cash, card, Cash App, Zelle, Venmo.</p></footer>
+<script>
+const C=['All','5x7','6x9','8x10',"8'6x13",'Runner'];let cur='All',sort='num',D=[];
+const f=document.getElementById('f'),g=document.getElementById('g');
+function bar(){f.innerHTML=C.map(c=>`<button class="${c==cur?'on':''}" data-c="${c}">${c}</button>`).join('')+
+`<select id="so"><option value="num">Sort: Rug #</option><option value="lo">Price: low–high</option><option value="hi">Price: high–low</option><option value="size">Size</option></select>`;
+document.getElementById('so').value=sort;}
+const ord={'Runner':0,'5x7':1,'6x9':2,'8x10':3,"8'6x13":4};
+function draw(){let L=D.filter(r=>cur=='All'||r.cat==cur);
+L.sort((a,b)=>sort=='lo'?a.price-b.price:sort=='hi'?b.price-a.price:sort=='size'?ord[a.cat]-ord[b.cat]||a.rug-b.rug:a.rug-b.rug);
+L.sort((a,b)=>(a.sold?1:0)-(b.sold?1:0));
+g.innerHTML=L.map(r=>`<div class="c ${r.sold?'sold':''}">${r.sold?'<span class="badge">SOLD</span>':''}<img loading="lazy" src="${r.img}" alt="Rug ${r.rug}">
+<div class="b"><div class="n">Rug #${r.rug}</div><div class="t">${r.title}</div><div class="s">${r.size}</div><div class="cd">${r.condition}</div>
+<span class="p">$${r.price}</span>${r.retail?`<span class="r">Retail $${r.retail}</span>`:''}
+${r.url&&!r.sold?`<br><a class="l" href="${r.url}" target="_blank" rel="noopener">View on Marketplace →</a>`:''}</div></div>`).join('');}
+f.onclick=e=>{if(e.target.dataset.c){cur=e.target.dataset.c;bar();draw();}};f.onchange=e=>{sort=e.target.value;draw();};
+fetch('rugs.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{D=d;bar();draw();});
+</script></body></html>
