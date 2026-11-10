@@ -296,7 +296,7 @@
   "price": 45,
   "retail": "79.99",
   "url": "https://www.facebook.com/marketplace/item/1879413343025602/",
-  "sold": false,
+  "sold": true,
   "img": "img/42.jpg"
  },
  {
